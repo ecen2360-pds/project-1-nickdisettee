@@ -1,0 +1,10 @@
+#1ms is 3332
+#N in r4
+
+DELAY: 
+    addi r2, r0, 3332
+    muli r2, r2, r4
+DELAY_LOOP:
+    subi r2, r2, 1
+    bne r2, r0, DELAY_LOOP
+    ret
