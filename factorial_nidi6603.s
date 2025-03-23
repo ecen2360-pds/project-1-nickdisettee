@@ -1,5 +1,4 @@
 #n in r4
-
 FACTORIAL:
     addi r2, r0, 1
     addi r3, r0, 1
