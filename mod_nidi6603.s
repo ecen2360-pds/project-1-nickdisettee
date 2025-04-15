@@ -1,4 +1,8 @@
-MOD:
+# Verified
+
+# preforms r4 mod r5
+.global mod
+mod:
     addi sp, sp, -8
     stw r8, 0(sp)
     stw r9, 4(sp)
