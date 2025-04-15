@@ -1,58 +1,45 @@
-.text
-.global _start
+# Verified
 
-_start:
-    movia r8, 0xFF201000       # JTAG address
-    movia r9, 0x1000           # buffer at 0x1000
-    call JTAG_START
-    movia r8, 0x1000
-    call ATOI
-    br end
+.global atoi
 
-JTAG_START:
-    addi r10, r0, 0
+# put JTAG UART address into r4
+# r2 is the return value
+atoi:
+    addi  sp, sp, -8
+    stw   ra, 4(sp)
 
-READ_LOOP:
-    ldwio r11, 4(r8)           # JTAG UART status register
-    andi r11, r11, 0x8000      # check if data is valid
-    beq r11, r0, READ_LOOP
+    mov   r2, r0
+    mov   r8, r0
 
-    ldwio r12, 0(r8)           # read char in JTAG UART
-    stb r12, 0(r9)             # store char in buffer
-    addi r9, r9, 1
-    addi r10, r10, 1
-    movi r13, 0x0A             # \n TODO: *DOUBLE CHECK THIS PART* 
-    beq r12, r13, READ_DONE
-    br READ_LOOP
+    ldb   r3, 0(r4)
+    movi  r9, 0x2D
+    beq   r3, r9, atoi_neg
 
-READ_DONE:
-    movi r12, 0
-    stb r12, 0(r9)
-    ret
+atoi_loop:
 
-ATOI:
-    addi r2, r0, 0
-    addi r3, r0, 0
-    ldbu r4, 0(r8)             # load first character
-    movi r5, 0x2D              # -
-    bne r4, r5, LOOP
-    movi r3, 1
-    addi r8, r8, 1
-LOOP:
-    ldbu r4, 0(r8)
-    beq r4, r0, DONE
-    movi r5, 0x30 
-    blt r4, r5, DONE      # exit if <0
-    movi r5, 0x39
-    bgt r4, r5, DONE      # exit if >9
+    ldb   r3, 0(r4)
+    movi  r9, 0x30     
+    movi  r10, 0x39  
+	
+    blt   r3, r9, atoi_done
+    bgt   r3, r10, atoi_done
+	
+    sub   r3, r3, r9   
+    muli  r2, r2, 10
+    add   r2, r2, r3
+    addi  r4, r4, 1
+    br    atoi_loop
 
-    subi r4, r4, 0x30          # convert
-    muli r2, r2, 10
-    add r2, r2, r4 
-    addi r8, r8, 1
-    br LOOP
-DONE:
-    beq r3, r0, END
-    sub r2, r0, r2
-END:
+atoi_neg:
+    movi  r8, 1
+    addi  r4, r4, 1
+    br    atoi_loop
+
+atoi_done:
+    beq   r8, r0, atoi_ret
+    sub   r2, r0, r2
+
+atoi_ret:
+    ldw   ra, 4(sp)
+    addi  sp, sp, 8
     ret
