@@ -1,10 +1,13 @@
-#1ms is 3332
-#N in r4
+# Verified
 
-DELAY: 
-    addi r2, r0, 3332
-    muli r2, r2, r4
-DELAY_LOOP:
-    subi r2, r2, 1
-    bne r2, r0, DELAY_LOOP
+.global delayNms
+
+# N in r4
+delayNms:
+    mov   r8, r4
+    movia r3, 1820       # Value I found worked when testing
+    mul   r8, r8, r3     
+delay_loop:
+    addi  r8, r8, -1
+    bne   r8, r0, delay_loop
     ret
