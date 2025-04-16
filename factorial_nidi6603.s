@@ -1,5 +1,4 @@
 # Verified
-
 # N in r4
 .global factorial
 factorial:
