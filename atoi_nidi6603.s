@@ -3,7 +3,7 @@
 .global atoi
 
 # put JTAG UART address into r4
-# r2 is the return value
+# r2 is the return value 
 atoi:
     addi  sp, sp, -8
     stw   ra, 4(sp)
