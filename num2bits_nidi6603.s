@@ -42,7 +42,7 @@ num2bits_err:
 
 num2bits_end:
     add     r2, r19, r0     # put return value in r2
-    
+
     ldw     ra, 24(sp)      # epilogue
     ldw     r21, 20(sp)
     ldw     r20, 16(sp)
